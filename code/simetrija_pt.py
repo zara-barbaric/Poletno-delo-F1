@@ -4,7 +4,7 @@ import re
 
 colors1 = plt.cm.Set2(np.linspace(0, 1, 8))
 plt.rcParams.update({
-    "figure.figsize": (6, 4),
+    "figure.figsize": (3, 2),
     "font.size": 15,
     "font.family": "serif",
     'text.usetex': True,
