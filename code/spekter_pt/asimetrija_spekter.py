@@ -7,8 +7,8 @@ import re
 
 ###ZA SPREMENITI:
 #Pot do histos.saf datotek, ki jih generira Madanalysis
-file1 = "/home/zara/Documents/ma5/C_eu/pp_cee/C_1.0/Output/SAF/_defaultset/MadAnalysis5job_0/Histograms/histos.saf"
-file2 = "/home/zara/Documents/ma5/C_eu/pp_c~ee/C_1.0/Output/SAF/_defaultset/MadAnalysis5job_0/Histograms/histos.saf"
+file_c = "/home/zara/Documents/ma5/C_eu/pp_cee/C_1.0/Output/SAF/_defaultset/MadAnalysis5job_0/Histograms/histos.saf"
+file_anti_c = "/home/zara/Documents/ma5/C_eu/pp_c~ee/C_1.0/Output/SAF/_defaultset/MadAnalysis5job_0/Histograms/histos.saf"
 #Pot do končne slike
 fig_path = "/home/zara/Documents/graphs/asimetrija_SMEFT.png"
 
@@ -71,29 +71,38 @@ def read_saf(filename):
     }
 
 #Izračuna asimetrijo
-def simetrija_data(file1, file2):
-    data1 = read_saf(file1)
-    data2 = read_saf(file2)
-
-    bin_centers1 = data1["bin_centers"]
-    bin_centers2 = data2["bin_centers"]
+def asymetry(file_c, file_anti_c):
+    """
+    Izračuna asimetrijo med kvarkoma c in c~ (samo znotraj enega modela.
     
-    if not np.array_equal(bin_centers1, bin_centers2):
+    Parametri
+    ---------
+    file_c : pot do datoteke histos.saf s podatki za histogram, ki ga ustvari Madanalysis za proces s kvarkom c
+    file_anti_c : pot do datoteke histos.saf s podatki za histogram, ki ga ustvari Madanalysis za proces s kvarkom c~
+    """
+
+    data_c = read_saf(file_c)
+    data_anti_c = read_saf(file_anti_c)
+
+    bin_centers_c = data_c["bin_centers"]
+    bin_centers_anti_c = data_anti_c["bin_centers"]
+    
+    if not np.array_equal(bin_centers_c, bin_centers_anti_c):
         raise ValueError(f"Bins do not match")
 
-    bin_width = data1["bin_width"]
+    bin_width = data_c["bin_width"]
 
-    bin_values1 = data1["bin_values"]
-    bin_values2 = data2["bin_values"]
+    bin_values_c = data_c["bin_values"]
+    bin_values_anti_c = data_anti_c["bin_values"]
 
-    sum_vals = bin_values1 + bin_values2
-    diff_vals = bin_values1 - bin_values2
+    sum_vals = bin_values_c + bin_values_anti_c
+    diff_vals = bin_values_c - bin_values_anti_c
     with np.errstate(divide='ignore', invalid='ignore'):
         bin_values = np.where(sum_vals != 0, diff_vals / sum_vals, 0)
     
-    return bin_centers1, bin_width, bin_values
+    return bin_centers_c, bin_width, bin_values
 
-bin_centers, bin_width, bin_values = simetrija_data(file1, file2)
+bin_centers, bin_width, bin_values = asymetry(file_c, file_anti_c)
 
 plt.bar(bin_centers, bin_values, width=bin_width, color="#5954d8", edgecolor='black', linewidth=0.5)
 plt.xlabel("$p_T$ [GeV]")

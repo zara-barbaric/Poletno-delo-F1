@@ -7,7 +7,7 @@
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=16G
 #SBATCH --qos=student
-#SBATCH --output=/home/barbariczara/2026/output/pt_photon/C_lq3_c~ee.out
+#SBATCH --output=/home/barbariczara/2026/output/pt_electron/C_lq3_c~ee.out
 
 module load GCC/7.3.0
 module load GCCcore/7.3.0
@@ -16,4 +16,4 @@ source /home/barbariczara/root/root_install/bin/thisroot.sh
 source ~/.bashrc
 
 #Commands:
-bash ~/2026/code/pt_photon/mg5_clq3_c~.sh
+bash ~/2026/code/pt_electron/mg5_clq3_c~.sh
